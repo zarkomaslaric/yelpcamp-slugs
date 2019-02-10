@@ -20,8 +20,8 @@
                         <em>Submitted By <%= campground.author.username %></em>
                     </p>
                     <% if(currentUser && campground.author.id.equals(currentUser._id)){ %>
-                        <a class="btn btn-xs btn-warning" href="/campgrounds/<%= campground._id %>/edit">Edit</a>
-                        <form id="delete-form" action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST">
+                        <a class="btn btn-xs btn-warning" href="/campgrounds/<%= campground.slug %>/edit">Edit</a>
+                        <form id="delete-form" action="/campgrounds/<%= campground.slug %>?_method=DELETE" method="POST">
                             <button class="btn btn-xs btn-danger">Delete</button>
                         </form>
                     <% }%>
@@ -29,7 +29,7 @@
             </div>
             <div class="well">
                 <div class="text-right">
-                    <a class="btn btn-success" href="/campgrounds/<%= campground._id %>/comments/new">Add New Comment</a>
+                    <a class="btn btn-success" href="/campgrounds/<%= campground.slug %>/comments/new">Add New Comment</a>
                 </div>
                 <hr>
                 <% campground.comments.forEach(function(comment){ %>
@@ -42,8 +42,8 @@
                             </p>
                         <% if(currentUser && comment.author.id.equals(currentUser._id)){ %>
                             <a class="btn btn-xs btn-warning" 
-                               href="/campgrounds/<%=campground._id %>/comments/<%=comment._id %>/edit">Edit</a>
-                            <form id="delete-form" action="/campgrounds/<%=campground._id %>/comments/<%=comment._id %>?_method=DELETE" method="POST">
+                               href="/campgrounds/<%=campground.slug %>/comments/<%=comment._id %>/edit">Edit</a>
+                            <form id="delete-form" action="/campgrounds/<%=campground.slug %>/comments/<%=comment._id %>?_method=DELETE" method="POST">
                                 <input type="submit" class="btn btn-xs btn-danger" value="Delete">
                             </form>
                         <% } %>

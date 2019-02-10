@@ -45,9 +45,9 @@ router.get("/new", middleware.isLoggedIn, function(req, res){
 });
 
 // SHOW - shows more info about one campground
-router.get("/:id", function(req, res){
+router.get("/:slug", function(req, res){
     //find the campground with provided ID
-    Campground.findById(req.params.id).populate("comments").exec(function(err, foundCampground){
+    Campground.findOne({slug: req.params.slug}).populate("comments").exec(function(err, foundCampground){
         if(err){
             console.log(err);
         } else {
@@ -59,28 +59,37 @@ router.get("/:id", function(req, res){
 });
 
 // EDIT CAMPGROUND ROUTE
-router.get("/:id/edit", middleware.checkCampgroundOwnership, function(req, res){
-    Campground.findById(req.params.id, function(err, foundCampground){
+router.get("/:slug/edit", middleware.checkCampgroundOwnership, function(req, res){
+    Campground.findOne({slug: req.params.slug}, function(err, foundCampground){
         res.render("campgrounds/edit", {campground: foundCampground});
     });
 });
 
 // UPDATE CAMPGROUND ROUTE
-router.put("/:id",middleware.checkCampgroundOwnership, function(req, res){
+router.put("/:slug",middleware.checkCampgroundOwnership, function(req, res){
     // find and update the correct campground
-    Campground.findByIdAndUpdate(req.params.id, req.body.campground, function(err, updatedCampground){
+    Campground.findOne({slug: req.params.slug}, function(err, campground){
        if(err){
            res.redirect("/campgrounds");
        } else {
-           //redirect somewhere(show page)
-           res.redirect("/campgrounds/" + req.params.id);
+           campground.name = req.body.campground.name;
+           campground.description = req.body.campground.description;
+           campground.image = req.body.campground.image;
+           campground.save(function (err) {
+             if(err){
+               console.log(err);
+               res.redirect("/campgrounds");
+             } else {
+               res.redirect("/campgrounds/" + campground.slug);
+             }
+           });
        }
     });
 });
 
 // DESTROY CAMPGROUND ROUTE
-router.delete("/:id",middleware.checkCampgroundOwnership, function(req, res){
-   Campground.findByIdAndRemove(req.params.id, function(err){
+router.delete("/:slug",middleware.checkCampgroundOwnership, function(req, res){
+   Campground.findOneAndRemove({slug: req.params.slug}, function(err){
       if(err){
           res.redirect("/campgrounds");
       } else {
