@@ -113,7 +113,7 @@ The **slugify** function takes the campground name and generates a friendly URL 
 
 Now, we want to make sure that the generated slug is unique, otherwise we may run into issues in our app. To do that, we use the `Campground.findOne({slug: slug})` method which allows check if a campground with the same slug already exists.
 
-If the campground variable is undefined (`!campround` would be true), that means that there is no same slug in the database, and that the newly generated slug is unique. In that case, we can return the unique slug from our function, which then gets assigned to **this.slug** in the mongoose 'pre save' hook.
+If the campground variable is undefined (`!campground` would be true), that means that there is no same slug in the database, and that the newly generated slug is unique. In that case, we can return the unique slug from our function, which then gets assigned to **this.slug** in the mongoose 'pre save' hook.
 
 Also, we use `campground._id.equals(id))` to check if the current campground owns the found slug (when updating an existing campground), in which case we can allow its usage further.
 
